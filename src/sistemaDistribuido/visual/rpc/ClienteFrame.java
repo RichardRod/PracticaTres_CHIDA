@@ -109,6 +109,13 @@ public class ClienteFrame extends ProcesoFrame {
             arregloCasteado[i] = Integer.parseInt(arreglo[i]);
         }//fin de for
 
+        System.out.println("Casteado");
+        for (int i = 0; i < arregloCasteado.length; i++) {
+            System.out.println(arregloCasteado[i]);
+        }//fin de for
+
+
+
         return arregloCasteado;
     }//fin del metodo castearCampos
 

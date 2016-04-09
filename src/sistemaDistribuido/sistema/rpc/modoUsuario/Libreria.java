@@ -46,18 +46,24 @@ public abstract class Libreria {
     public int miSuma(int numeroParametros, int[] arreglo)
     {
         int resultado;
-        for(int i = numeroParametros - 1; i >= 0; i--){
-            pilaParametros.push(new Integer(arreglo[i]));
+        int elemento;
+
+        for(int i = 0; i < arreglo.length; i++){
+            elemento = arreglo[i];
+            pilaParametros.push(new Integer(elemento));
         }//fin de for
 
         pilaParametros.push(new Integer(numeroParametros));
         miSuma();
-        resultado = (Integer) pilaParametros.pop();
+
+        resultado = pilaParametros.pop().intValue();
+        System.out.println("Resultado Libreria.java: " + resultado);
         return resultado;
     }//fin del metodo miSuma
 
     public int miMultiplicacion(int numeroParametros, int[] arreglo)
     {
+
         int resultado;
         for(int i = numeroParametros - 1; i >= 0; i--){
             pilaParametros.push(new Integer(arreglo[i]));

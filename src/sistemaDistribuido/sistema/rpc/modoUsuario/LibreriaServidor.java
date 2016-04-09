@@ -14,18 +14,24 @@ public class LibreriaServidor extends Libreria {
 
     @Override
     protected void miSuma() {
+        System.out.println("SI SE LLAMA");
         int parametros = pilaParametros.pop();
-        int[] arreglo = new int[parametros];
-
-        for (int i = 0; i < parametros; i++) {
-            arreglo[i] = pilaParametros.pop();
-        }//fin de for
-
         int resultado = 0;
 
-        for(int i = 0; i < arreglo.length; i++){
-            resultado += arreglo[i];
+        System.out.println("Mi pinche pila");
+        for (int i = 0; i < pilaParametros.size(); i++) {
+            System.out.println(pilaParametros.get(i));
+        }
+
+        //aquii errrrrooorrrrr
+        int elemento;
+        for (int i = 0; i < parametros; i++) {
+            elemento = pilaParametros.pop();
+            System.out.println("This is: " + elemento);
+            resultado += elemento;
         }//fin de for
+
+        System.out.println("Resultado LibreriaServidor.java: " + resultado);
 
         pilaParametros.push(new Integer(resultado));
     }
@@ -36,13 +42,13 @@ public class LibreriaServidor extends Libreria {
         int parametros = pilaParametros.pop().intValue();
         int[] arreglo = new int[parametros];
 
-        for(int i = 0; i < parametros; i++){
+        for (int i = 0; i < parametros; i++) {
             arreglo[i] = pilaParametros.pop().intValue();
         }//fin de for
 
         int resultado = 1;
 
-        for(int i = 0; i < arreglo.length; i++){
+        for (int i = 0; i < arreglo.length; i++) {
             resultado *= arreglo[i];
         }//fin de for
 
@@ -52,6 +58,11 @@ public class LibreriaServidor extends Libreria {
 
     @Override
     protected void miDivision() {
+
+        int parametroUno = pilaParametros.pop().intValue();
+        int parametroDos = pilaParametros.pop().intValue();
+
+        pilaParametros.push(parametroDos / parametroUno);
 
     }
 

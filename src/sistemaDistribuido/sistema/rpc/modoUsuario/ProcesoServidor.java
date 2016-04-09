@@ -59,7 +59,6 @@ public class ProcesoServidor extends Proceso {
                     break;
             }//fin de switch
 
-
         }//fin de while
 
         //RPC.deregistrarInterfaz(nombreServidor, version, idUnico)  //para practica 4
@@ -68,16 +67,101 @@ public class ProcesoServidor extends Proceso {
     private void ejecutarDivision(byte[] solCliente) {
         //variables locales
         byte[] respServidor = new byte[1024];
+        int destino = solCliente[0];
 
         imprimeln("Solicitando: Operacion Division");
+
+        int parametroUno=0;
+        int parametroDos = 0;
+
+        parametroUno=(int)(parametroUno|solCliente[10+3]);
+        parametroUno=(int)(parametroUno<<8);
+        parametroUno=(int)(parametroUno|(solCliente[10+2]&0x00FF));
+        parametroUno=(int)(parametroUno<<8);
+        parametroUno=(int)(parametroUno|(solCliente[10+1]&0x00FF));
+        parametroUno=(int)(parametroUno<<8);
+        parametroUno=(int)(parametroUno|(solCliente[10]&0x00FF));
+
+        parametroDos=(int)(parametroDos|solCliente[14+3]);
+        parametroDos=(int)(parametroDos<<8);
+        parametroDos=(int)(parametroDos|(solCliente[14+2]&0x00FF));
+        parametroDos=(int)(parametroDos<<8);
+        parametroDos=(int)(parametroDos|(solCliente[14+1]&0x00FF));
+        parametroDos=(int)(parametroDos<<8);
+        parametroDos=(int)(parametroDos|(solCliente[14]&0x00FF));
+
+        int arreglo[] = new int[2];
+        arreglo[0] = parametroUno;
+        arreglo[1] = parametroDos;
+
+        int resultado = ls.miDivision(2, arreglo);
+
+        respServidor[8]=(byte)resultado;
+        respServidor[8+1]=(byte)(resultado>>>8);
+        respServidor[8+2]=(byte)(resultado>>>16);
+        respServidor[8+2]=(byte)(resultado>>>24);
+
+        imprimeln("Enviando Respuesta Suma al cliente: " + resultado);
+        Nucleo.send(destino, respServidor);
+        imprimeln("Respuesta Enviada");
+
     }
 
     private void ejecutarSuma(byte[] solCliente) {
         //variables locales
         byte[] respServidor = new byte[1024];
+        int destino = solCliente[0];
 
         imprimeln("Solicitando: Operacion Suma");
-    }
+
+        int valoresSumar = 0;
+
+        valoresSumar = (valoresSumar | solCliente[13]);
+        valoresSumar = (valoresSumar << 8);
+        valoresSumar = (valoresSumar | (solCliente[12] & 0x00FF));
+        valoresSumar = (valoresSumar << 8);
+        valoresSumar = (valoresSumar | (solCliente[11] & 0x00FF));
+        valoresSumar = (valoresSumar << 8);
+        valoresSumar = (valoresSumar | (solCliente[10] & 0x00FF));
+
+        int numeroParametros = valoresSumar;
+        int[] arregloContenido = new int[numeroParametros];
+
+        int elemento = 0;
+        int index = 14;
+        for (int i = 0; i < numeroParametros; i++) {
+            elemento = (elemento | solCliente[index + 3]);
+            elemento = (elemento << 8);
+            elemento = (elemento | (solCliente[index + 2] & 0x00FF));
+            elemento = (elemento << 8);
+            elemento = (elemento | (solCliente[index + 1] & 0x00FF));
+            elemento = (elemento << 8);
+            elemento = (elemento | (solCliente[index] & 0x00FF));
+
+            arregloContenido[i] = elemento;
+        }//fin de for
+
+        int resultado = ls.miSuma(numeroParametros, arregloContenido);
+
+        System.out.println("Me da: " + resultado);
+
+        //empacar resultado
+        respServidor[8] = (byte) (resultado);
+        respServidor[9] = (byte) (resultado >>> 8);
+        respServidor[10] = (byte) (resultado >>> 16);
+        respServidor[10] = (byte) (resultado >>> 24);
+
+        System.out.println("Resultado Suma Magico: " + resultado);
+
+        imprimeln("Enviando Respuesta Suma al cliente: " + resultado);
+        System.out.println("Otra vez");
+        for (int i = 0; i < respServidor.length; i++) {
+            System.out.print(respServidor[i] + "-");
+        }
+        Nucleo.send(destino, respServidor);
+        imprimeln("Respuesta Enviada");
+
+    }//fin del metodo ejecutarSuma
 
     private void ejecutarMultiplicacion(byte[] solCliente) {
         //variables locales
@@ -113,7 +197,7 @@ public class ProcesoServidor extends Proceso {
 
         System.out.println("Resultado Cuadrado Magico: " + resultado);
 
-        imprimeln("Enviando Respuesta al cliente");
+        imprimeln("Enviando Respuesta Cuadrado al cliente: " + resultado);
         Nucleo.send(destino, respServidor);
         imprimeln("Respuesta Enviada");
 
