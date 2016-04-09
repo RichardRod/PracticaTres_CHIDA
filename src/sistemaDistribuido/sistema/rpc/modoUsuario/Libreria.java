@@ -43,35 +43,41 @@ public abstract class Libreria {
 
     }//fin del metodo miDivision
 
-    public int miSuma(int numeroParametros, int[] arreglo)
+    public int miSuma(int[] arreglo)
     {
-        int resultado;
-        int elemento;
+        System.out.println("Suma invocada Libreria.java");
+        int numeroParametros = arreglo.length;
 
-        for(int i = 0; i < arreglo.length; i++){
-            elemento = arreglo[i];
-            pilaParametros.push(new Integer(elemento));
-        }//fin de for
-
-        pilaParametros.push(new Integer(numeroParametros));
-        miSuma();
-
-        resultado = pilaParametros.pop().intValue();
-        System.out.println("Resultado Libreria.java: " + resultado);
-        return resultado;
-    }//fin del metodo miSuma
-
-    public int miMultiplicacion(int numeroParametros, int[] arreglo)
-    {
-
-        int resultado;
-        for(int i = numeroParametros - 1; i >= 0; i--){
+        for(int i = 0; i < numeroParametros; i++){
             pilaParametros.push(new Integer(arreglo[i]));
         }//fin de for
 
         pilaParametros.push(new Integer(numeroParametros));
+
+        miSuma();
+
+        return pilaParametros.pop().intValue();
+    }//fin del metodo miSuma
+
+    public int miMultiplicacion(int[] arreglo)
+    {
+
+        int num;
+        for(int i=0;i<arreglo.length;i++){
+            num=arreglo[i];
+            pilaParametros.push(num);
+        }
+
+
+        int numPam=arreglo.length;
+        pilaParametros.push(numPam);
+
+
         miMultiplicacion();
-        return resultado = pilaParametros.pop().intValue();
+
+        int result2=(Integer)pilaParametros.pop();
+
+        return result2;
     }//fin del metodo miMultiplicacion
 
     public int miCuadrado(int valor)

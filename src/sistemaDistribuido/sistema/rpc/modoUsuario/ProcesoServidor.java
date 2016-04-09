@@ -101,73 +101,79 @@ public class ProcesoServidor extends Proceso {
         respServidor[8+2]=(byte)(resultado>>>16);
         respServidor[8+2]=(byte)(resultado>>>24);
 
-        imprimeln("Enviando Respuesta Suma al cliente: " + resultado);
+        imprimeln("Enviando Respuesta Division al cliente: " + resultado);
         Nucleo.send(destino, respServidor);
         imprimeln("Respuesta Enviada");
 
     }
 
     private void ejecutarSuma(byte[] solCliente) {
-        //variables locales
         byte[] respServidor = new byte[1024];
-        int destino = solCliente[0];
+        int noParametros=desempaqueta(10,solCliente);
 
-        imprimeln("Solicitando: Operacion Suma");
+        int arrayParametros[]=new int[noParametros];
 
-        int valoresSumar = 0;
+        int iniPos=14;
+        int num;
 
-        valoresSumar = (valoresSumar | solCliente[13]);
-        valoresSumar = (valoresSumar << 8);
-        valoresSumar = (valoresSumar | (solCliente[12] & 0x00FF));
-        valoresSumar = (valoresSumar << 8);
-        valoresSumar = (valoresSumar | (solCliente[11] & 0x00FF));
-        valoresSumar = (valoresSumar << 8);
-        valoresSumar = (valoresSumar | (solCliente[10] & 0x00FF));
-
-        int numeroParametros = valoresSumar;
-        int[] arregloContenido = new int[numeroParametros];
-
-        int elemento = 0;
-        int index = 14;
-        for (int i = 0; i < numeroParametros; i++) {
-            elemento = (elemento | solCliente[index + 3]);
-            elemento = (elemento << 8);
-            elemento = (elemento | (solCliente[index + 2] & 0x00FF));
-            elemento = (elemento << 8);
-            elemento = (elemento | (solCliente[index + 1] & 0x00FF));
-            elemento = (elemento << 8);
-            elemento = (elemento | (solCliente[index] & 0x00FF));
-
-            arregloContenido[i] = elemento;
-        }//fin de for
-
-        int resultado = ls.miSuma(numeroParametros, arregloContenido);
-
-        System.out.println("Me da: " + resultado);
-
-        //empacar resultado
-        respServidor[8] = (byte) (resultado);
-        respServidor[9] = (byte) (resultado >>> 8);
-        respServidor[10] = (byte) (resultado >>> 16);
-        respServidor[10] = (byte) (resultado >>> 24);
-
-        System.out.println("Resultado Suma Magico: " + resultado);
-
-        imprimeln("Enviando Respuesta Suma al cliente: " + resultado);
-        System.out.println("Otra vez");
-        for (int i = 0; i < respServidor.length; i++) {
-            System.out.print(respServidor[i] + "-");
+        for(int i=0;i<noParametros;i++){
+            num = desempaqueta(iniPos,solCliente);
+            arrayParametros[i]=num;
+            iniPos=iniPos+4;
         }
-        Nucleo.send(destino, respServidor);
-        imprimeln("Respuesta Enviada");
+        int result2=ls.miSuma(arrayParametros);
+        imprimeln("Empaquetando");
+        empaca(8,result2,respServidor);
+
+        Nucleo.send(solCliente[0],respServidor);
 
     }//fin del metodo ejecutarSuma
 
     private void ejecutarMultiplicacion(byte[] solCliente) {
         //variables locales
         byte[] respServidor = new byte[1024];
+        byte destino = solCliente[8];
 
         imprimeln("Solicitando: Operacion Multiplicacion");
+
+
+        int aux=0;
+
+        aux=(int)(aux|solCliente[10+3]);
+        aux=(int)(aux<<8);
+        aux=(int)(aux|(solCliente[10+2]&0x00FF));
+        aux=(int)(aux<<8);
+        aux=(int)(aux|(solCliente[10+1]&0x00FF));
+        aux=(int)(aux<<8);
+        aux=(int)(aux|(solCliente[10]&0x00FF));
+
+        int arrayParametros[]=new int[aux];
+
+        int iniPos=14;
+        int num = 0;
+
+        for(int i = 0; i < aux; i++){
+            num=(int)(num|solCliente[iniPos+3]);
+            num=(int)(num<<8);
+            num=(int)(num|(solCliente[iniPos+2]&0x00FF));
+            num=(int)(num<<8);
+            num=(int)(num|(solCliente[iniPos+1]&0x00FF));
+            num=(int)(num<<8);
+            num=(int)(num|(solCliente[iniPos]&0x00FF));
+            arrayParametros[i] = num;
+            iniPos=iniPos+4;
+
+        }
+
+        int resultado = ls.miMultiplicacion(arrayParametros);
+        respServidor[8]=(byte)resultado;
+        respServidor[8+1]=(byte)(resultado>>>8);
+        respServidor[8+2]=(byte)(resultado>>>16);
+        respServidor[8+2]=(byte)(resultado>>>24);
+
+        imprimeln("Enviando Respuesta Division al cliente: " + resultado);
+        Nucleo.send(destino, respServidor);
+        imprimeln("Respuesta Enviada");
     }
 
     private void ejecutarCuadrado(byte[] solCliente) {
@@ -203,5 +209,31 @@ public class ProcesoServidor extends Proceso {
 
     }//fin del metodo ejecutarCuadrado
 
+
+    public void empaca(int posIni,int num,byte[] array){
+
+        array[posIni]=(byte)num;
+        array[posIni+1]=(byte)(num>>>8);
+        array[posIni+2]=(byte)(num>>>16);
+        array[posIni+2]=(byte)(num>>>24);
+
+    }
+
+    public int desempaqueta(int pos,byte[] arreglo2){
+
+        int aux=0;
+
+        aux=(int)(aux|arreglo2[pos+3]);
+        aux=(int)(aux<<8);
+        aux=(int)(aux|(arreglo2[pos+2]&0x00FF));
+        aux=(int)(aux<<8);
+        aux=(int)(aux|(arreglo2[pos+1]&0x00FF));
+        aux=(int)(aux<<8);
+        aux=(int)(aux|(arreglo2[pos]&0x00FF));
+
+        //System.out.println(String.format("Entero Desempaquetado en Hexadecimal: %02X",aux));
+
+        return aux;
+    }
 
 }

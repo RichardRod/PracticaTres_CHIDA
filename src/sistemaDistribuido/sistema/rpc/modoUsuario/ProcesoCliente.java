@@ -73,11 +73,11 @@ public class ProcesoCliente extends Proceso {
         resultado = lib.miDivision(parametrosDivision.length, parametrosDivision);
         imprimeln("Resultado Operacion Division: " + resultado);
 
-        resultado = lib.miSuma(parametrosSuma.length, parametrosSuma);
+        resultado = lib.miSuma(parametrosSuma);
         imprimeln("Resultado Operacion Suma: " + resultado);
 
-        resultado = lib.miMultiplicacion(parametrosMultiplicacion.length, parametrosMultiplicacion);
-        imprimeln("Resultado Operacion Multiplicacion: " + resultado);
+        //resultado = lib.miMultiplicacion(parametrosMultiplicacion);
+        //imprimeln("Resultado Operacion Multiplicacion: " + resultado);
 
         resultado = lib.miCuadrado(cuadrado);
         imprimeln("Resultado Operacion Cuadrado: " + resultado);

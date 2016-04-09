@@ -14,45 +14,30 @@ public class LibreriaServidor extends Libreria {
 
     @Override
     protected void miSuma() {
-        System.out.println("SI SE LLAMA");
-        int parametros = pilaParametros.pop();
-        int resultado = 0;
 
-        System.out.println("Mi pinche pila");
-        for (int i = 0; i < pilaParametros.size(); i++) {
-            System.out.println(pilaParametros.get(i));
-        }
+        int numeroParametros = pilaParametros.pop().intValue();
 
-        //aquii errrrrooorrrrr
-        int elemento;
-        for (int i = 0; i < parametros; i++) {
-            elemento = pilaParametros.pop();
-            System.out.println("This is: " + elemento);
-            resultado += elemento;
+        int suma = 0;
+        for(int i = 0; i < numeroParametros; i++){
+            suma += pilaParametros.pop().intValue();
         }//fin de for
 
-        System.out.println("Resultado LibreriaServidor.java: " + resultado);
+        System.out.println("Resultado Suma LibreriaServidor,java: " + suma);
 
-        pilaParametros.push(new Integer(resultado));
-    }
+        pilaParametros.push(new Integer(suma));
+    }//fin del metodo miSuma
 
     @Override
     protected void miMultiplicacion() {
 
-        int parametros = pilaParametros.pop().intValue();
-        int[] arreglo = new int[parametros];
+        int noParametros=(Integer)pilaParametros.pop();
+        int result=0,num;
 
-        for (int i = 0; i < parametros; i++) {
-            arreglo[i] = pilaParametros.pop().intValue();
-        }//fin de for
-
-        int resultado = 1;
-
-        for (int i = 0; i < arreglo.length; i++) {
-            resultado *= arreglo[i];
-        }//fin de for
-
-        pilaParametros.push(new Integer(resultado));
+        for(int i=0;i<noParametros;i++){
+            num=(Integer)pilaParametros.pop();
+            result=result*num;
+        }
+        pilaParametros.push(result);
 
     }//fin de la funcion muiMultiplicacion
 
@@ -61,10 +46,10 @@ public class LibreriaServidor extends Libreria {
 
         int parametroUno = pilaParametros.pop().intValue();
         int parametroDos = pilaParametros.pop().intValue();
+        int result1 = parametroDos / parametroUno;
+        pilaParametros.push(result1);
 
-        pilaParametros.push(parametroDos / parametroUno);
-
-    }
+    }//fin del metodo miDivision
 
     @Override
     protected void miCuadrado() {
