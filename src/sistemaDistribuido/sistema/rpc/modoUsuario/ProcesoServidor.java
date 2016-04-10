@@ -108,25 +108,20 @@ public class ProcesoServidor extends Proceso {
     }
 
     private void ejecutarSuma(byte[] solCliente) {
+
         //variables locales
         byte[] respServidor = new byte[1024];
         int destino = solCliente[0];
         int numeroParametros = desempacarDatos(solCliente);
 
-        System.out.println("Devolvio esta madre: " + numeroParametros);
-
         int arregloElementos[] = new int[numeroParametros];
 
         imprimeln("Solicitando: Operacion Multiplicacion");
 
-        int iniPos = 14;
-        int num;
-
-        for (int i = 0; i < numeroParametros; i++) {
-            num = desempaqueta(iniPos, solCliente);
-            arregloElementos[i] = num;
-            iniPos = iniPos + 4;
+        for (int i = 0, j = 14; i < numeroParametros; i++, j += 4) {
+            arregloElementos[i] = desempacarDatosArreglo(j, solCliente);
         }
+
         int resultado = ls.miSuma(arregloElementos);
 
         respServidor[8] = (byte) resultado;
@@ -233,20 +228,14 @@ public class ProcesoServidor extends Proceso {
         return valor;
     }
 
-    public int desempaqueta(int pos,byte[] arreglo2){
+    public int desempacarDatosArreglo(int indice, byte[] datosEmpacados) {
 
-        int aux=0;
+        int valor = 0x0;
 
-        aux=(int)(aux|arreglo2[pos+3]);
-        aux=(int)(aux<<8);
-        aux=(int)(aux|(arreglo2[pos+2]&0x00FF));
-        aux=(int)(aux<<8);
-        aux=(int)(aux|(arreglo2[pos+1]&0x00FF));
-        aux=(int)(aux<<8);
-        aux=(int)(aux|(arreglo2[pos]&0x00FF));
+        valor = (int) ((datosEmpacados[indice] & 0x000000FF) | (datosEmpacados[indice + 1] << 8 & 0x0000FF00) | (datosEmpacados[indice + 2] << 16 & 0x00FF0000) | (datosEmpacados[indice + 3] << 24 & 0xFF000000));
 
-
-        return aux;
+        return valor;
     }
+
 
 }
