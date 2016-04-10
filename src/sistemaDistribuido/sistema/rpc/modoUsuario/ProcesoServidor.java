@@ -65,30 +65,18 @@ public class ProcesoServidor extends Proceso {
     }
 
     private void ejecutarDivision(byte[] solCliente) {
+
         //variables locales
         byte[] respServidor = new byte[1024];
         int destino = solCliente[0];
 
         imprimeln("Solicitando: Operacion Division");
 
-        int parametroUno = 0;
-        int parametroDos = 0;
+        int parametroUno;
+        int parametroDos;
 
-        parametroUno = (int) (parametroUno | solCliente[10 + 3]);
-        parametroUno = (int) (parametroUno << 8);
-        parametroUno = (int) (parametroUno | (solCliente[10 + 2] & 0x00FF));
-        parametroUno = (int) (parametroUno << 8);
-        parametroUno = (int) (parametroUno | (solCliente[10 + 1] & 0x00FF));
-        parametroUno = (int) (parametroUno << 8);
-        parametroUno = (int) (parametroUno | (solCliente[10] & 0x00FF));
-
-        parametroDos = (int) (parametroDos | solCliente[14 + 3]);
-        parametroDos = (int) (parametroDos << 8);
-        parametroDos = (int) (parametroDos | (solCliente[14 + 2] & 0x00FF));
-        parametroDos = (int) (parametroDos << 8);
-        parametroDos = (int) (parametroDos | (solCliente[14 + 1] & 0x00FF));
-        parametroDos = (int) (parametroDos << 8);
-        parametroDos = (int) (parametroDos | (solCliente[14] & 0x00FF));
+        parametroUno = desempacarDatos(solCliente);
+        parametroDos = desempacarDatosArreglo(14, solCliente);
 
         int arreglo[] = new int[2];
         arreglo[0] = parametroUno;
@@ -181,29 +169,19 @@ public class ProcesoServidor extends Proceso {
     }
 
     private void ejecutarCuadrado(byte[] solCliente) {
+
         //variables locales
         byte[] respServidor = new byte[1024];
         int destino = solCliente[0];
 
         imprimeln("Solicitando: Operacion Cuadrado");
 
-        int valorOperacion = 0;
-
-        valorOperacion = (valorOperacion | solCliente[13]);
-        valorOperacion = (valorOperacion << 8);
-        valorOperacion = (valorOperacion | (solCliente[12] & 0x00FF));
-        valorOperacion = (valorOperacion << 8);
-        valorOperacion = (valorOperacion | (solCliente[11] & 0x00FF));
-        valorOperacion = (valorOperacion << 8);
-        valorOperacion = (valorOperacion | (solCliente[10] & 0x00FF));
+        int valorOperacion = desempacarDatos(solCliente);
 
         int resultado = ls.miCuadrado(valorOperacion);
 
         //empacar resultado
-        respServidor[8] = (byte) (resultado);
-        respServidor[9] = (byte) (resultado >>> 8);
-        respServidor[10] = (byte) (resultado >>> 16);
-        respServidor[11] = (byte) (resultado >>> 24);
+        respServidor = empacarDatos(respServidor, resultado);
 
         System.out.println("Resultado Cuadrado Magico: " + resultado);
 
@@ -213,11 +191,6 @@ public class ProcesoServidor extends Proceso {
 
     }//fin del metodo ejecutarCuadrado
 
-
-    public void empacarDatosSuma(int posIni, int num, byte[] array) {
-
-
-    }
 
     public int desempacarDatos(byte[] datosEmpacados) {
 
@@ -236,6 +209,18 @@ public class ProcesoServidor extends Proceso {
 
         return valor;
     }
+
+    public byte[] empacarDatos(byte[] arreglo, int valor){
+
+        byte[] arregloAux = arreglo;
+
+        for(int i = 0, corrimiento = 0; i < 4; i++, corrimiento += 8){
+            arregloAux[i + 8] = (byte) (valor >>> corrimiento);
+        }
+
+        return arregloAux;
+
+    }//fin del metodo empacarDatos
 
 
 }
