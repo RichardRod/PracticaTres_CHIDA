@@ -61,23 +61,18 @@ public abstract class Libreria {
 
     public int miMultiplicacion(int[] arreglo)
     {
+        System.out.println("Multiplicacion invocada Libreria.java");
+        int numeroParametros = arreglo.length;
 
-        int num;
-        for(int i=0;i<arreglo.length;i++){
-            num=arreglo[i];
-            pilaParametros.push(num);
-        }
+        for(int i = 0; i < numeroParametros; i++){
+            pilaParametros.push(new Integer(arreglo[i]));
+        }//fin de for
 
+        pilaParametros.push(new Integer(numeroParametros));
 
-        int numPam=arreglo.length;
-        pilaParametros.push(numPam);
+        miSuma();
 
-
-        miMultiplicacion();
-
-        int result2=(Integer)pilaParametros.pop();
-
-        return result2;
+        return pilaParametros.pop().intValue();
     }//fin del metodo miMultiplicacion
 
     public int miCuadrado(int valor)

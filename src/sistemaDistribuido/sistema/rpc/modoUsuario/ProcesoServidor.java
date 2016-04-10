@@ -84,10 +84,7 @@ public class ProcesoServidor extends Proceso {
 
         int resultado = ls.miDivision(2, arreglo);
 
-        respServidor[8] = (byte) resultado;
-        respServidor[8 + 1] = (byte) (resultado >>> 8);
-        respServidor[8 + 2] = (byte) (resultado >>> 16);
-        respServidor[8 + 2] = (byte) (resultado >>> 24);
+        respServidor = empacarDatos(respServidor, resultado);
 
         imprimeln("Enviando Respuesta Division al cliente: " + resultado);
         Nucleo.send(destino, respServidor);

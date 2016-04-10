@@ -45,18 +45,11 @@ public class LibreriaCliente extends Libreria {
 
         int numeroParametros = pilaParametros.pop().intValue();
 
-        empaca(10, numeroParametros, solCliente);
+        solCliente = empacarDatos(solCliente, numeroParametros);
 
-        int posIniA = 14, num;
-
-        for (int i = 0; i < numeroParametros; i++) {
-
-            num = pilaParametros.pop().intValue();
-
-            empaca(posIniA, num, solCliente);
-
-            posIniA = posIniA + 4;
-        }
+        for (int i = 0, j = 14; i < numeroParametros; i++, j += 4) {
+            empacarDatosArreglo(solCliente, pilaParametros.pop().intValue(), j);
+        }//fin de for
 
         imprimeln("Enviando Datos");
         Nucleo.send(248, solCliente);
@@ -169,16 +162,15 @@ public class LibreriaCliente extends Libreria {
         byte[] solCliente = new byte[1024];
         byte[] respServidor = new byte[1024];
 
-        int valorCuadrado = pilaParametros.pop().intValue();
-
         //empacar codop
         solCliente[8] = CUADRADO;
 
         //empacar datos relativos a la operacion
-        solCliente[10] = (byte) valorCuadrado;
+        solCliente = empacarDatos(solCliente, pilaParametros.pop().intValue());
+        /*solCliente[10] = (byte) valorCuadrado;
         solCliente[11] = (byte) (valorCuadrado >>> 8);
         solCliente[12] = (byte) (valorCuadrado >>> 16);
-        solCliente[13] = (byte) (valorCuadrado >>> 24);
+        solCliente[13] = (byte) (valorCuadrado >>> 24);*/
 
         imprimeln("Enviando Datos");
         Nucleo.send(248, solCliente);
@@ -225,4 +217,46 @@ public class LibreriaCliente extends Libreria {
 
         return aux;
     }
+
+    public int desempacarDatos(byte[] datosEmpacados) {
+
+        int valor = 0x0;
+
+        valor = (int) ((datosEmpacados[10] & 0x000000FF) | (datosEmpacados[11] << 8 & 0x0000FF00) | (datosEmpacados[12] << 16 & 0x00FF0000) | (datosEmpacados[13] << 24 & 0xFF000000));
+
+        return valor;
+    }
+
+    public int desempacarDatosArreglo(int indice, byte[] datosEmpacados) {
+
+        int valor = 0x0;
+
+        valor = (int) ((datosEmpacados[indice] & 0x000000FF) | (datosEmpacados[indice + 1] << 8 & 0x0000FF00) | (datosEmpacados[indice + 2] << 16 & 0x00FF0000) | (datosEmpacados[indice + 3] << 24 & 0xFF000000));
+
+        return valor;
+    }
+
+    public byte[] empacarDatos(byte[] arreglo, int valor){
+
+        byte[] arregloAux = arreglo;
+
+        for(int i = 0, corrimiento = 0; i < 4; i++, corrimiento += 8){
+            arregloAux[i + 10] = (byte) (valor >>> corrimiento);
+        }
+
+        return arregloAux;
+
+    }//fin del metodo empacarDatos
+
+    public byte[] empacarDatosArreglo(byte[] arreglo, int valor, int indice){
+
+        byte[] arregloAux = arreglo;
+
+        for(int i = 0, corrimiento = 0; i < 4; i++, corrimiento += 8){
+            arregloAux[i + indice] = (byte) (valor >>> corrimiento);
+        }
+
+        return arregloAux;
+
+    }//fin del metodo empacarDatos
 }//fin de la clase LibreriaCliente
