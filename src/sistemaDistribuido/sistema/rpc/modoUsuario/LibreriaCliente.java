@@ -79,7 +79,7 @@ public class LibreriaCliente extends Libreria {
 
         System.out.println("Parametros Division: " + parametroUno + " - " + parametroDos);
 
-        solCliente[8] = DIVISION;
+        solCliente[8] = DIVISION; //establecer codigoOperacion
 
         solCliente = empacarDatosArreglo(solCliente, parametroDos, 10);
         solCliente = empacarDatosArreglo(solCliente, parametroUno, 14);
@@ -102,7 +102,7 @@ public class LibreriaCliente extends Libreria {
         byte[] respServidor = new byte[1024];
 
         //empacar codop
-        solCliente[8] = CUADRADO;
+        solCliente[8] = CUADRADO; //establecer CodigoOperacion
 
         //empacar datos relativos a la operacion
         solCliente = empacarDatos(solCliente, pilaParametros.pop().intValue());
@@ -126,7 +126,7 @@ public class LibreriaCliente extends Libreria {
         valor = (int) ((datosEmpacados[indice] & 0x000000FF) | (datosEmpacados[indice + 1] << 8 & 0x0000FF00) | (datosEmpacados[indice + 2] << 16 & 0x00FF0000) | (datosEmpacados[indice + 3] << 24 & 0xFF000000));
 
         return valor;
-    }
+    }//fin del metodo desempacarDatosArreglo
 
     public byte[] empacarDatos(byte[] arreglo, int valor){
 
@@ -134,7 +134,7 @@ public class LibreriaCliente extends Libreria {
 
         for(int i = 0, corrimiento = 0; i < 4; i++, corrimiento += 8){
             arregloAux[i + 10] = (byte) (valor >>> corrimiento);
-        }
+        }//fin de for
 
         return arregloAux;
 
@@ -146,7 +146,7 @@ public class LibreriaCliente extends Libreria {
 
         for(int i = 0, corrimiento = 0; i < 4; i++, corrimiento += 8){
             arregloAux[i + indice] = (byte) (valor >>> corrimiento);
-        }
+        }//fin de for
 
         return arregloAux;
 

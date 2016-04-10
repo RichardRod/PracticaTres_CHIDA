@@ -70,7 +70,7 @@ public abstract class Libreria {
 
         pilaParametros.push(new Integer(numeroParametros));
 
-        miSuma();
+        miMultiplicacion();
 
         return pilaParametros.pop().intValue();
     }//fin del metodo miMultiplicacion

@@ -117,49 +117,7 @@ public class ProcesoServidor extends Proceso {
     }//fin del metodo ejecutarSuma
 
     private void ejecutarMultiplicacion(byte[] solCliente) {
-        //variables locales
-        byte[] respServidor = new byte[1024];
-        byte destino = solCliente[8];
 
-        imprimeln("Solicitando: Operacion Multiplicacion");
-
-
-        int aux = 0;
-
-        aux = (int) (aux | solCliente[10 + 3]);
-        aux = (int) (aux << 8);
-        aux = (int) (aux | (solCliente[10 + 2] & 0x00FF));
-        aux = (int) (aux << 8);
-        aux = (int) (aux | (solCliente[10 + 1] & 0x00FF));
-        aux = (int) (aux << 8);
-        aux = (int) (aux | (solCliente[10] & 0x00FF));
-
-        int arrayParametros[] = new int[aux];
-
-        int iniPos = 14;
-        int num = 0;
-
-        for (int i = 0; i < aux; i++) {
-            num = (int) (num | solCliente[iniPos + 3]);
-            num = (int) (num << 8);
-            num = (int) (num | (solCliente[iniPos + 2] & 0x00FF));
-            num = (int) (num << 8);
-            num = (int) (num | (solCliente[iniPos + 1] & 0x00FF));
-            num = (int) (num << 8);
-            num = (int) (num | (solCliente[iniPos] & 0x00FF));
-            arrayParametros[i] = num;
-            iniPos = iniPos + 4;
-        }
-
-        int resultado = ls.miMultiplicacion(arrayParametros);
-        respServidor[8] = (byte) resultado;
-        respServidor[8 + 1] = (byte) (resultado >>> 8);
-        respServidor[8 + 2] = (byte) (resultado >>> 16);
-        respServidor[8 + 2] = (byte) (resultado >>> 24);
-
-        imprimeln("Enviando Respuesta Division al cliente: " + resultado);
-        Nucleo.send(destino, respServidor);
-        imprimeln("Respuesta Enviada");
     }
 
     private void ejecutarCuadrado(byte[] solCliente) {

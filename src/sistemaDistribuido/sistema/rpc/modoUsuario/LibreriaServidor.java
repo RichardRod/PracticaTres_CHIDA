@@ -30,14 +30,7 @@ public class LibreriaServidor extends Libreria {
     @Override
     protected void miMultiplicacion() {
 
-        int noParametros=(Integer)pilaParametros.pop();
-        int result=0,num;
 
-        for(int i=0;i<noParametros;i++){
-            num=(Integer)pilaParametros.pop();
-            result=result*num;
-        }
-        pilaParametros.push(result);
 
     }//fin de la funcion muiMultiplicacion
 
@@ -46,8 +39,8 @@ public class LibreriaServidor extends Libreria {
 
         int parametroUno = pilaParametros.pop().intValue();
         int parametroDos = pilaParametros.pop().intValue();
-        int result1 = parametroDos / parametroUno;
-        pilaParametros.push(result1);
+
+        pilaParametros.push(parametroDos / parametroUno);
 
     }//fin del metodo miDivision
 
