@@ -104,7 +104,7 @@ public class ProcesoServidor extends Proceso {
 
         int arregloElementos[] = new int[numeroParametros];
 
-        imprimeln("Solicitando: Operacion Multiplicacion");
+        imprimeln("Solicitando: Operacion Suma");
 
         for (int i = 0, j = 14; i < numeroParametros; i++, j += 4) {
             arregloElementos[i] = desempacarDatosArreglo(j, solCliente);
@@ -112,10 +112,7 @@ public class ProcesoServidor extends Proceso {
 
         int resultado = ls.miSuma(arregloElementos);
 
-        respServidor[8] = (byte) resultado;
-        respServidor[9] = (byte) (resultado >>> 8);
-        respServidor[10] = (byte) (resultado >>> 16);
-        respServidor[10] = (byte) (resultado >>> 24);
+        respServidor = empacarDatos(respServidor, resultado);
 
         imprimeln("Enviando Respuesta Suma al cliente: " + resultado);
         Nucleo.send(destino, respServidor);
